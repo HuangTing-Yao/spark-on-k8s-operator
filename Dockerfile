@@ -18,6 +18,9 @@ ARG SPARK_IMAGE=gcr.io/spark-operator/spark:v3.0.0
 
 FROM golang:1.14.1-alpine as builder
 
+WORKDIR /
+COPY github.com/ github.com/
+
 WORKDIR /workspace
 
 # Copy the Go Modules manifests
@@ -25,6 +28,7 @@ COPY go.mod go.mod
 COPY go.sum go.sum
 # Cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
+RUN apk add git
 RUN go mod download
 
 # Copy the go source code
